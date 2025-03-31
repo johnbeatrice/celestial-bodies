@@ -1,0 +1,9 @@
+Query history:
+
+CREATE DATABASE universe;
+
+\c universe
+
+CREATE TABLE galaxy(galaxy_id SERIAL PRIMARY KEY, name TEXT, num_stars INT, diameter_in_tril_miles NUMERIC(9), num_galaxies_within_5_mil_light_years INT, is_spiral BOOLEAN, has_black_hole BOOLEAN);
+
+CREATE TABLE star(star_id SERIAL PRIMARY KEY, name TEXT, num_planets INT, diameter_in_tril_miles NUMERIC(9), num_stars_within_10_light_years INT);
