@@ -6,11 +6,77 @@ CREATE DATABASE universe;
 
 CREATE TABLE galaxy(galaxy_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, num_stars INT NOT NULL, diameter_in_tril_miles NUMERIC(9), num_galaxies_within_5_mil_light_years INT, is_spiral BOOLEAN, has_black_hole BOOLEAN);
 
-CREATE TABLE star(star_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, num_planets INT NOT NULL, diameter_in_tril_miles NUMERIC(9), num_stars_within_10_light_years INT, CONSTRAINT fk_galaxy FOREIGN KEY galaxy_id REFERENCES galaxy(galaxy_id) ON DELETE SET NULL);
+CREATE TABLE star(star_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, num_planets INT NOT NULL, diameter_in_miles NUMERIC(9), num_stars_within_10_light_years INT, FOREIGN KEY galaxy_id REFERENCES galaxy(galaxy_id) ON DELETE SET NULL);
 
 CREATE TABLE planet(planet_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, num_moons INT NOT NULL, diameter_in_miles NUMERIC(9), FOREIGN KEY star_id REFERENCES star(star_id) ON DELETE SET NULL);
 
 CREATE TABLE moon(moon_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, orbit_time_in_hours INT NOT NULL, diameter_in_miles NUMERIC(9), FOREIGN KEY planet_id REFERENCES planet(planet_id) ON DELETE SET NULL);
+
+#junction table
+CREATE TABLE celestial_bodies(galaxy_id INT REFERENCES galaxy(galaxy_id), star_id INT REFERENCES star(star_id), planet_id INT REFERENCES planet(planet_id), moon_id INT REFERENCES moon(moon_id), PRIMARY KEY (galaxy_id, star_id, planet_id, moon_id));
+
+# inserting rows 
+INSERT INTO galaxy(name, num_stars, diameter_in_tril_miles, num_galaxies_within_5_mil_light_years, is_spiral, has_black_hole)
+VALUES
+  ('Good_Egg', 80, 1, 3, TRUE, TRUE),
+  ('Honeyhive', 50, 1, 2, TRUE, TRUE),
+  ('Space_Junk', 30, 1, 1, FALSE, TRUE),
+  ('Gusty_Garden', 90, 1, 4, TRUE, TRUE),
+  ('Bowsers_Galaxy_Reactor', 75, 1, 0, FALSE, TRUE),
+  ('Battlerock', 40, 1, 1, FALSE, TRUE);
+
+
+INSERT INTO star(name, num_planets, diameter_in_miles, num_stars_within_10_light_years, galaxy_id)
+VALUES
+    ('Launch_Star', 2, 800000, 5, 1),
+    ('Sling_Star', 0, 600000, 0, 2),
+    ('Pull_Star', 1, 1200000, 2, 3),
+    ('Rainbow_Star', 14, 2000000, 10, 4),
+    ('Luma', 5, 550000, 1, 5),
+    ('Power_Star', 8, 2500000, 8, 6);
+
+
+INSERT INTO planet(name, num_moons, diameter_in_miles, star_id)
+VALUES
+    ('Planetoid', 0, 1500, 1),
+    ('Flipswap_Planet', 1, 2200, 2),
+    ('Honeybloom_Planet', 2, 3000, 3),
+    ('Rolling_Green_Planet', 0, 1800, 4),
+    ('Starshroom_Planet', 3, 2800, 5),
+    ('Throwback_Galaxy_Planet', 1, 2000, 6),
+    ('Dino_Piranha_Planet', 0, 2500, 1),
+    ('Bouldergeist_Planet', 2, 3500, 2),
+    ('Good_Egg_Planet', 1, 1900, 3),
+    ('Space_Junk_Planet', 0, 1600, 4),
+    ('Gusty_Garden_Planet', 3, 3200, 5),
+    ('Battlerock_Planet', 2, 2700, 6);
+
+INSERT INTO moon (name, orbit_time_in_hours, diameter_in_miles, planet_id)
+VALUES
+    ('Luma_Moon_1', 12, 100, 1),
+    ('Luma_Moon_2', 15, 120, 1),
+    ('Flip_Moon_1', 10, 80, 2),
+    ('Flip_Moon_2', 13, 90, 2),
+    ('Honey_Moon_1', 18, 150, 3),
+    ('Honey_Moon_2', 20, 160, 3),
+    ('Honey_Moon_3', 22, 170, 3),
+    ('Green_Moon_1', 11, 85, 4),
+    ('Star_Moon_1', 16, 130, 5),
+    ('Star_Moon_2', 17, 140, 5),
+    ('Star_Moon_3', 19, 155, 5),
+    ('Throwback_Moon_1', 14, 110, 6),
+    ('Dino_Moon_1', 13, 105, 7),
+    ('Boulder_Moon_1', 21, 165, 8),
+    ('Boulder_Moon_2', 23, 175, 8),
+    ('Egg_Moon_1', 12, 95, 9),
+    ('Junk_Moon_1', 11, 90, 10),
+    ('Garden_Moon_1', 18, 145, 11),
+    ('Garden_Moon_2', 19, 150, 11),
+    ('Battle_Moon_1', 17, 135, 12);
+
+
+
+
 
 
 
