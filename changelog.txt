@@ -4,16 +4,22 @@ CREATE DATABASE universe;
 
 \c universe
 
+# create galaxy table
 CREATE TABLE galaxy(galaxy_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, num_stars INT NOT NULL, diameter_in_tril_miles NUMERIC(9), num_galaxies_within_5_mil_light_years INT, is_spiral BOOLEAN, has_black_hole BOOLEAN);
 
+# create star table
 CREATE TABLE star(star_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, num_planets INT NOT NULL, diameter_in_miles NUMERIC(9), num_stars_within_10_light_years INT, galaxy_id INT, CONSTRAINT galaxy_id_fkey FOREIGN KEY (galaxy_id) REFERENCES galaxy(galaxy_id) ON DELETE SET NULL);
 
+# create planet table
 CREATE TABLE planet(planet_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, num_moons INT NOT NULL, diameter_in_miles NUMERIC(9), star_id INT, FOREIGN KEY (star_id) REFERENCES star(star_id) ON DELETE SET NULL);
 
+# create moon table
 CREATE TABLE moon(moon_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, orbit_time_in_hours INT NOT NULL, diameter_in_miles NUMERIC(9), planet_id INT, FOREIGN KEY (planet_id) REFERENCES planet(planet_id) ON DELETE SET NULL);
 
-#junction table
-CREATE TABLE celestial_bodies(galaxy_id INT REFERENCES galaxy(galaxy_id), star_id INT REFERENCES star(star_id), planet_id INT REFERENCES planet(planet_id), moon_id INT REFERENCES moon(moon_id), CONSTRAINT PK_celestial_bodies PRIMARY KEY (galaxy_id, star_id, planet_id, moon_id));
+# create asteroid table
+CREATE TABLE asteroid (asteroid_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, diameter_in_miles NUMERIC(10, 2), orbital_period_in_years NUMERIC(10, 2), material_composition TEXT, star_id INT, planet_id INT, FOREIGN KEY (star_id) REFERENCES star(star_id) ON DELETE SET NULL, FOREIGN KEY (planet_id) REFERENCES planet(planet_id) ON DELETE SET NULL
+);
+
 
 # inserting rows 
 INSERT INTO galaxy(name, num_stars, diameter_in_tril_miles, num_galaxies_within_5_mil_light_years, is_spiral, has_black_hole)
@@ -76,6 +82,11 @@ VALUES
 
 
 
+INSERT INTO asteroid (name, diameter_in_miles, orbital_period_in_years, material_composition, star_id, planet_id)
+VALUES
+    ('Starbit_Rock', 10, 0.5, 'Candy Rock', 1, NULL),
+    ('Rolling_Stone', 15, 0.7, 'Obsidian', 1, NULL),
+    ('Sky_Cannon_Ball', 8, 0.3, 'Metal', 1, 3);
 
 
 
