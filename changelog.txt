@@ -13,7 +13,7 @@ CREATE TABLE planet(planet_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQ
 CREATE TABLE moon(moon_id SERIAL PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, orbit_time_in_hours INT NOT NULL, diameter_in_miles NUMERIC(9), planet_id INT, FOREIGN KEY (planet_id) REFERENCES planet(planet_id) ON DELETE SET NULL);
 
 #junction table
-CREATE TABLE celestial_bodies(galaxy_id INT REFERENCES galaxy(galaxy_id), star_id INT REFERENCES star(star_id), planet_id INT REFERENCES planet(planet_id), moon_id INT REFERENCES moon(moon_id), PRIMARY KEY (galaxy_id, star_id, planet_id, moon_id));
+CREATE TABLE celestial_bodies(galaxy_id INT REFERENCES galaxy(galaxy_id), star_id INT REFERENCES star(star_id), planet_id INT REFERENCES planet(planet_id), moon_id INT REFERENCES moon(moon_id), CONSTRAINT PK_celestial_bodies PRIMARY KEY (galaxy_id, star_id, planet_id, moon_id));
 
 # inserting rows 
 INSERT INTO galaxy(name, num_stars, diameter_in_tril_miles, num_galaxies_within_5_mil_light_years, is_spiral, has_black_hole)
