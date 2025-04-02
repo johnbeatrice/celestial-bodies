@@ -1,5 +1,5 @@
 # celestial-bodies
-freecodecamp relational database project
+freecodecamp relational database project - PostgreSQL
 
 ## Project requirements:
 
