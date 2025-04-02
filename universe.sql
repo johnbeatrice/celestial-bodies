@@ -44,18 +44,43 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: celestial_bodies; Type: TABLE; Schema: public; Owner: freecodecamp
+-- Name: asteroid; Type: TABLE; Schema: public; Owner: freecodecamp
 --
 
-CREATE TABLE public.celestial_bodies (
-    galaxy_id integer NOT NULL,
-    star_id integer NOT NULL,
-    planet_id integer NOT NULL,
-    moon_id integer NOT NULL
+CREATE TABLE public.asteroid (
+    asteroid_id integer NOT NULL,
+    name character varying(30) NOT NULL,
+    diameter_in_miles numeric(10,2),
+    orbital_period_in_years numeric(10,2),
+    material_composition text,
+    star_id integer,
+    planet_id integer
 );
 
 
-ALTER TABLE public.celestial_bodies OWNER TO freecodecamp;
+ALTER TABLE public.asteroid OWNER TO freecodecamp;
+
+--
+-- Name: asteroid_asteroid_id_seq; Type: SEQUENCE; Schema: public; Owner: freecodecamp
+--
+
+CREATE SEQUENCE public.asteroid_asteroid_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.asteroid_asteroid_id_seq OWNER TO freecodecamp;
+
+--
+-- Name: asteroid_asteroid_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: freecodecamp
+--
+
+ALTER SEQUENCE public.asteroid_asteroid_id_seq OWNED BY public.asteroid.asteroid_id;
+
 
 --
 -- Name: galaxy; Type: TABLE; Schema: public; Owner: freecodecamp
@@ -209,6 +234,13 @@ ALTER SEQUENCE public.star_star_id_seq OWNED BY public.star.star_id;
 
 
 --
+-- Name: asteroid asteroid_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.asteroid ALTER COLUMN asteroid_id SET DEFAULT nextval('public.asteroid_asteroid_id_seq'::regclass);
+
+
+--
 -- Name: galaxy galaxy_id; Type: DEFAULT; Schema: public; Owner: freecodecamp
 --
 
@@ -237,9 +269,12 @@ ALTER TABLE ONLY public.star ALTER COLUMN star_id SET DEFAULT nextval('public.st
 
 
 --
--- Data for Name: celestial_bodies; Type: TABLE DATA; Schema: public; Owner: freecodecamp
+-- Data for Name: asteroid; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
+INSERT INTO public.asteroid VALUES (1, 'Starbit_Rock', 10.00, 0.50, 'Candy Rock', 1, NULL);
+INSERT INTO public.asteroid VALUES (2, 'Rolling_Stone', 15.00, 0.70, 'Obsidian', 1, NULL);
+INSERT INTO public.asteroid VALUES (3, 'Sky_Cannon_Ball', 8.00, 0.30, 'Metal', 1, 3);
 
 
 --
@@ -311,6 +346,13 @@ INSERT INTO public.star VALUES (6, 'Power_Star', 8, 2500000, 8, 6);
 
 
 --
+-- Name: asteroid_asteroid_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
+--
+
+SELECT pg_catalog.setval('public.asteroid_asteroid_id_seq', 3, true);
+
+
+--
 -- Name: galaxy_galaxy_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
@@ -339,11 +381,19 @@ SELECT pg_catalog.setval('public.star_star_id_seq', 6, true);
 
 
 --
--- Name: celestial_bodies celestial_bodies_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: asteroid asteroid_name_key; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.celestial_bodies
-    ADD CONSTRAINT celestial_bodies_pkey PRIMARY KEY (galaxy_id, star_id, planet_id, moon_id);
+ALTER TABLE ONLY public.asteroid
+    ADD CONSTRAINT asteroid_name_key UNIQUE (name);
+
+
+--
+-- Name: asteroid asteroid_pkey; Type: CONSTRAINT; Schema: public; Owner: freecodecamp
+--
+
+ALTER TABLE ONLY public.asteroid
+    ADD CONSTRAINT asteroid_pkey PRIMARY KEY (asteroid_id);
 
 
 --
@@ -411,35 +461,19 @@ ALTER TABLE ONLY public.star
 
 
 --
--- Name: celestial_bodies celestial_bodies_galaxy_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: asteroid asteroid_planet_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.celestial_bodies
-    ADD CONSTRAINT celestial_bodies_galaxy_id_fkey FOREIGN KEY (galaxy_id) REFERENCES public.galaxy(galaxy_id);
-
-
---
--- Name: celestial_bodies celestial_bodies_moon_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.celestial_bodies
-    ADD CONSTRAINT celestial_bodies_moon_id_fkey FOREIGN KEY (moon_id) REFERENCES public.moon(moon_id);
+ALTER TABLE ONLY public.asteroid
+    ADD CONSTRAINT asteroid_planet_id_fkey FOREIGN KEY (planet_id) REFERENCES public.planet(planet_id) ON DELETE SET NULL;
 
 
 --
--- Name: celestial_bodies celestial_bodies_planet_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
+-- Name: asteroid asteroid_star_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
-ALTER TABLE ONLY public.celestial_bodies
-    ADD CONSTRAINT celestial_bodies_planet_id_fkey FOREIGN KEY (planet_id) REFERENCES public.planet(planet_id);
-
-
---
--- Name: celestial_bodies celestial_bodies_star_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
---
-
-ALTER TABLE ONLY public.celestial_bodies
-    ADD CONSTRAINT celestial_bodies_star_id_fkey FOREIGN KEY (star_id) REFERENCES public.star(star_id);
+ALTER TABLE ONLY public.asteroid
+    ADD CONSTRAINT asteroid_star_id_fkey FOREIGN KEY (star_id) REFERENCES public.star(star_id) ON DELETE SET NULL;
 
 
 --
